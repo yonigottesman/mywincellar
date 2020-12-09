@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+    <div class="col-md-6 px-0">
+      <h1 class="display-4 font-italic">Personal Wine Cellar</h1>
+    </div>
+</div>
+
+
+    {% if form %}
+    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">+</button>
+    <div id="demo" class="collapse">
+        {{ wtf.quick_form(form) }}
+    </div>
+    {% endif %}
+    </br>   
+    </br>   
+    </br>   
+
+    {% for wine in wines %}
+        {% include '_wine.html' %}
+    {% endfor %}
+{% endblock %}

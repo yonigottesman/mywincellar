@@ -1,0 +1,7 @@
+.env
+.history
+.__pycache__
+venv
+__pycache__
+.vscode
+app.db
