@@ -43,5 +43,6 @@ class Wine(db.Model):
     
 @listens_for(Wine, 'after_delete')
 def on_delete(mapper, connection, wine):
-    os.remove(wine.file_name)
+    if wine.file_name:
+        os.remove(wine.file_name)
     

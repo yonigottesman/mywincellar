@@ -4,8 +4,8 @@
     <tr class="" href="#">
         <td class="col-12">
             {% if wine.file_name %}
-            <a href="{{ url_for('main.upload', wine_id=wine.id) }}">
-                <img src="{{ url_for('main.upload', wine_id=wine.id) }}" style="width: 128px" alt="wine image">
+            <a href="{{ url_for('wine.upload', wine_id=wine.id) }}">
+                <img src="{{ url_for('wine.upload', wine_id=wine.id) }}" style="width: 128px" alt="wine image">
             </a>
             {% endif%}
 
@@ -25,7 +25,7 @@
             {{wine.timestamp.year}}/{{wine.timestamp.strftime('%b')}}
         </td>
       <td>
-        <a href="{{ url_for('main.edit_wine', wine_id=wine.id) }}"> <p href=#>&#9998;</p></a>
+        <a href="{{ url_for('wine.edit_wine', wine_id=wine.id) }}"> <p href=#>&#9998;</p></a>
 
       </td>
     </tr>

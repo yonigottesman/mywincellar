@@ -2,24 +2,23 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
+
+<a href={{ url_for('wine.index') }}>
 <div class="p-4 p-md-5 mb-4 text-white rounded bg-danger">
+
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 font-italic">Wines</h1>
+          </div>
+</div>
+</a>
+
+<a href=#>
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-info">
     <div class="col-md-6 px-0">
-      <h1 class="display-4 font-italic">Wines</h1>
+      <h1 class="display-4 font-italic">Recipes</h1>
     </div>
 </div>
+</a>
 
 
-    {% if form %}
-    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#addwine">+</button>
-    <div id="addwine" class="collapse">
-        {{ wtf.quick_form(form) }}
-    </div>
-    {% endif %}
-    </br>   
-    </br>   
-    </br>   
-
-    {% for wine in wines %}
-        {% include '_wine.html' %}
-    {% endfor %}
 {% endblock %}

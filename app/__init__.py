@@ -34,6 +34,9 @@ def create_app(config_class=Config):
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
+    from app.wine import bp as wine_bp
+    app.register_blueprint(wine_bp, url_prefix='/wine')
+
     return app
 
 from app import models
