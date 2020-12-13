@@ -1,8 +1,23 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-   My Wine Cellar
+   WineCellar
 {% endblock %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<style>
+  .checked {
+    color: orange;
+  }
+</style>
+{% endblock %}
+
 
 {% block navbar %}
 
@@ -29,8 +44,6 @@
         <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
         {% endif %}
     </ul>   
-    
-
 
     </div>
   </nav> 
@@ -41,10 +54,10 @@
 
 {% block content %}
     <div class="container">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% for category, message in messages %}
+              <div class="alert {{category}}" role="alert">{{ message }}</div>
             {% endfor %}
         {% endif %}
         {% endwith %}

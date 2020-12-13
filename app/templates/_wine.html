@@ -1,7 +1,34 @@
-<table class="table table-hover">
-    <tr>
-        <td>
+<div class="table-responsive">
+<table class="table table-hover table-borderless" >
+    <tbody>
+    <tr class="" href="#">
+        <td class="col-12">
+            {% if wine.file_name %}
+            <a href="{{ url_for('main.upload', wine_id=wine.id) }}">
+                <img src="{{ url_for('main.upload', wine_id=wine.id) }}" style="width: 128px" alt="wine image">
+            </a>
+            {% endif%}
+
+            </br>
             {{ wine.body }}
+            </br>
+            {% for n in range(wine.rating) %}
+                <span class="fa fa-star checked"></span>
+            {% endfor %}
+            {% for n in range(5 - wine.rating) %}
+                <span class="fa fa-star"></span>
+            {% endfor %}    
         </td>
+
+
+        <td class="">
+            {{wine.timestamp.year}}/{{wine.timestamp.strftime('%b')}}
+        </td>
+      <td>
+        <a href="{{ url_for('main.edit_wine', wine_id=wine.id) }}"> <p href=#>&#9998;</p></a>
+
+      </td>
     </tr>
+    </tbody>
 </table>
+</div>
