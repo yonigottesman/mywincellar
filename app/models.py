@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.event import listens_for
 import os
-
+from app.common import silentremove
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,5 +44,5 @@ class Wine(db.Model):
 @listens_for(Wine, 'after_delete')
 def on_delete(mapper, connection, wine):
     if wine.file_name:
-        os.remove(wine.file_name)
+        silentremove(wine.file_name)
     

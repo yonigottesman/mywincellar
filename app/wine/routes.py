@@ -10,7 +10,7 @@ import imghdr
 from PIL import Image
 from io import BytesIO
 from sqlalchemy import desc
-
+from app.common import silentremove
 
 def validate_image(stream):
     header = stream.read(512)
@@ -42,7 +42,7 @@ def valid_file(uploaded_file):
 
 def store_file(uploaded_file, wine):
     if wine.file_name:
-        os.remove(wine.file_name)
+        silentremove(wine.file_name)
     filename = secure_filename(uploaded_file.filename)
     directory = get_path(wine.id)
     if not os.path.exists(directory):
@@ -92,10 +92,8 @@ def upload(wine_id):
 @bp.route('/wines/<wine_id>', methods=['GET', 'POST'])
 @login_required
 def edit_wine(wine_id):
-
     wine = current_user.wines.filter_by(id=wine_id).first()
-    if not wine:
-        abort(404)
+    if not wine: abort(404)
         
     form = EditWineForm(rating=wine.rating, description=wine.body)
     if form.validate_on_submit():
@@ -110,8 +108,8 @@ def edit_wine(wine_id):
                     flash('Image Error!','alert-danger')
                     return redirect(url_for('wine.edit_wine',wine_id=wine_id))
                 store_file(uploaded_file, wine)
-            if form.delete_image.data:
-                os.remove(wine.file_name)
+            if form.delete_image.data and wine.file_name:
+                silentremove(wine.file_name)
                 wine.file_name = None
 
         db.session.commit()

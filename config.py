@@ -11,5 +11,5 @@ class Config(object):
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_CONTENT_LENGTH = 1024 * 1024 * 20 # 20mb
-    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif','.HEIC']
     UPLOAD_PATH = 'uploads'
