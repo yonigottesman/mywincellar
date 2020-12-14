@@ -11,6 +11,8 @@ from PIL import Image
 from io import BytesIO
 from sqlalchemy import desc
 from app.common import silentremove
+import pyheif
+
 
 def validate_image(stream):
     header = stream.read(512)
@@ -33,10 +35,8 @@ def get_path(wine_id):
 def valid_file(uploaded_file):
     filename = secure_filename(uploaded_file.filename)
     file_ext = os.path.splitext(filename)[1]
-    if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
-        file_ext != validate_image(uploaded_file.stream):                    
-            return False
-
+    if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+        return False
     return True
 
 
@@ -48,9 +48,21 @@ def store_file(uploaded_file, wine):
     if not os.path.exists(directory):
         os.makedirs(directory)
     file_bytes = BytesIO(uploaded_file.read())
-    Image.open(file_bytes).convert('RGB') \
-        .save(os.path.join(directory, filename),format='JPEG',optimize=True,quality=10)
-    wine.file_name = os.path.join(get_path(wine.id), secure_filename(uploaded_file.filename))
+    if (os.path.splitext(filename)[1] == '.HEIC'):
+        heif_file = pyheif.read(file_bytes)
+        image = Image.frombytes(
+            heif_file.mode, 
+            heif_file.size, 
+            heif_file.data,
+            "raw",
+            heif_file.mode,
+            heif_file.stride,
+        )
+    else:        
+        image =  Image.open(file_bytes)
+    newfilename = os.path.splitext(filename)[0] + '.jpg'
+    image.convert('RGB').save(os.path.join(directory, newfilename),format='JPEG',optimize=True,quality=10)
+    wine.file_name = os.path.join(get_path(wine.id), newfilename)
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -59,15 +71,14 @@ def store_file(uploaded_file, wine):
 def index():
     form = WineForm()
     if form.validate_on_submit():
+        if form.image.data != None and not valid_file(form.image.data):
+            flash('Image Error!','alert-danger')
+            return redirect(url_for('wine.index'))
         wine = Wine(body=form.description.data, author=current_user, rating=form.rating.data)
         db.session.add(wine)
-        db.session.commit()
-        uploaded_file = form.image.data        
-        if uploaded_file != None:
-            if not valid_file(uploaded_file):
-                flash('Image Error!','alert-danger')
-                return redirect(url_for('wine.index'))
-            store_file(uploaded_file, wine)
+        db.session.commit()               
+        if form.image.data != None:
+            store_file(form.image.data , wine)
             
         db.session.commit()
         flash('Added new wine!','alert-info')
@@ -97,17 +108,16 @@ def edit_wine(wine_id):
         
     form = EditWineForm(rating=wine.rating, description=wine.body)
     if form.validate_on_submit():
+        if form.image.data != None and not valid_file(form.image.data):
+            flash('Image Error!','alert-danger')
+            return redirect(url_for('wine.edit_wine',wine_id=wine_id))
         if form.delete.data:
             db.session.delete(wine)
         else:
             wine.body=form.description.data
             wine.rating=form.rating.data
-            uploaded_file = form.image.data        
-            if uploaded_file != None:
-                if not valid_file(uploaded_file):
-                    flash('Image Error!','alert-danger')
-                    return redirect(url_for('wine.edit_wine',wine_id=wine_id))
-                store_file(uploaded_file, wine)
+            if form.image.data != None:
+                store_file(form.image.data, wine)
             if form.delete_image.data and wine.file_name:
                 silentremove(wine.file_name)
                 wine.file_name = None
