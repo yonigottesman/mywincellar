@@ -1,7 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request, abort, current_app ,send_from_directory
-from flask_login import current_user, login_required
-from app import db
-from app.models import Wine
+from flask import render_template
+from flask_login import login_required
+
 from app.main import bp
 
 
