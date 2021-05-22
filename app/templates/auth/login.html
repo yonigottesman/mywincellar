@@ -1,12 +1,19 @@
-
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'form_macros.html' as fm%}
 
 {% block app_content %}
     <h1>Sign In</h1>
     <div class="row">
         <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {{ fm.input(form.username) }}
+                {{ fm.input(form.password) }}
+                {{ fm.input(form.remember_me, class="form-check-input") }}
+
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
+
         </div>
     </div>
     <br>

@@ -1,22 +1,22 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'form_macros.html' as fm %}
 
 {% block app_content %}
 {% if form %}
     <div class="row">
         <div class="col-md-4">
             <form action="" method="post" class="form" enctype="multipart/form-data" role="form">
-            
-                {{ form.hidden_tag() }}             
-              
-                {{ wtf.form_field(form.description) }}
-                {{ wtf.form_field(form.rating) }}
-                {{ wtf.form_field(form.image) }}
-                {{ wtf.form_field(form.delete_image) }}
+
+                {{ form.hidden_tag() }}
+                {{ fm.input(form.description) }}
+                {{ fm.input(form.rating, class="form-select") }}
+                {{ fm.input(form.image) }}
+                {{ fm.input(form.delete_image, class="form-check-input") }}
+
             </br>
-                {{ wtf.form_field(form.submit) }}
-                {{ wtf.form_field(form.delete, class="btn btn-danger") }}
-           
+                {{ form.submit(class="btn btn-primary") }}
+                {{ form.delete(class="btn  btn-danger") }}
+
               </form>
         </div>
     </div>
